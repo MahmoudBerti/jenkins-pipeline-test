@@ -452,7 +452,7 @@ mindmap
 
 #### La suite
 
-Place à la pratique : leçon **03 — Git : installation et configuration**, le premier outil concret du cours.
+Place aux concepts qui structurent tout le cours : leçon **03 — CI/CD : concepts et pipeline**.
 
 </details>
 

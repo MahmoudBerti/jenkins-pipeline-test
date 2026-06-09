@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# 06 — Dépôt distant
+# 08 — Dépôt distant
 
 ## Table des matières
 

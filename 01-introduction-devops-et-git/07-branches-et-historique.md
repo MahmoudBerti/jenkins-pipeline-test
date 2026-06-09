@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# 05 — Branches et historique
+# 07 — Branches et historique
 
 ## Table des matières
 
@@ -452,7 +452,7 @@ flowchart LR
 
 #### La suite
 
-Leçon **06 — Dépôt distant** : partager votre travail en ligne et collaborer via un serveur Git (GitHub).
+Leçon **08 — Dépôt distant** : partager votre travail en ligne et collaborer via un serveur Git (GitHub).
 
 </details>
 

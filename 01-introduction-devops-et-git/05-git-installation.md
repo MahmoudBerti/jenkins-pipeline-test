@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# 03 — Git : installation et configuration
+# 05 — Git : installation et configuration
 
 ## Table des matières
 
@@ -427,7 +427,7 @@ flowchart LR
 
 #### La suite
 
-Leçon **04 — Dépôt local et commits** : créer votre premier dépôt et enregistrer vos premiers changements.
+Leçon **06 — Dépôt local et commits** : créer votre premier dépôt et enregistrer vos premiers changements.
 
 </details>
 

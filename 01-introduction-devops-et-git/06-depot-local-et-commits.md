@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-# 04 — Dépôt local et commits
+# 06 — Dépôt local et commits
 
 ## Table des matières
 
@@ -495,7 +495,7 @@ flowchart LR
 
 #### La suite
 
-Leçon **05 — Branches et historique** : travailler sur plusieurs versions en parallèle sans casser la version principale.
+Leçon **07 — Branches et historique** : travailler sur plusieurs versions en parallèle sans casser la version principale.
 
 </details>
 
