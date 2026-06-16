@@ -8,6 +8,21 @@
 
 ---
 
+## À lire en premier : autonomie et évaluation
+
+> **Le professeur N'INTERVIENT PAS pendant l'activité.** Vous fusionnez vous-mêmes vos pull requests, vous formez vos binômes entre camarades, et vous résolvez vos conflits sans attendre personne.
+>
+> **C'est VOTRE responsabilité d'aller jusqu'au bout.** Le force-push n'est autorisé que sur **votre** branche (voir Règles de sécurité). Si vous cassez quelque chose, le professeur le **voit** dans l'historique mais ne le répare **pas** à votre place : `git reflog` est votre filet de sécurité.
+
+> **Comment le professeur vous évalue :** pas en direct, mais sur **l'historique du dépôt** (commits, branches, tags, reflog). Il compte vos **points de maîtrise** (voir le [tableau du concours](#tableau-du-concours-points)) avec :
+>
+> - `git log --oneline --graph --all` → la structure des branches et fusions ;
+> - `git shortlog -sn --all` → le nombre de commits par auteur ;
+> - `git log --author="Prénom Nom"`, `git tag`, et l'onglet GitHub **Pull requests** ;
+> - la propreté de votre historique après rebase/squash.
+
+---
+
 ## C'est un concours, niveau expert !
 
 Après la Partie 1, place aux **manipulations avancées** : **rebase**, **squash**, **stash**, **cherry-pick**, **tags** et **reflog**. Ici aussi, c'est une **compétition** : chaque technique correctement réalisée rapporte des **points**.
@@ -36,7 +51,7 @@ flowchart TD
 1. **Chaque étudiant a sa propre branche** : `enigme_prenom` (ex. `enigme_lea`). Vous ne travaillez **jamais** sur la branche d'un autre.
 2. **Chaque étudiant a son propre fichier d'énigme** : `enigmes/prenom.txt`.
 3. **`git push --force` est autorisé UNIQUEMENT sur VOTRE branche personnelle.** **Jamais** sur `main`, **jamais** sur la branche de quelqu'un d'autre. Un force-push au mauvais endroit **efface le travail des autres**.
-4. **`main` est protégée** : on n'y arrive que par **pull request** validée par le professeur (ou par les fusions encadrées des étapes de conflit).
+4. **On n'écrit jamais en force sur `main`** : on y arrive uniquement par **pull request** relue par un camarade, puis fusionnée par soi-même. Jamais de `push --force` sur `main`.
 5. **Tags nominatifs** : nommez vos tags `v1.0-prenom` (ex. `v1.0-lea`) pour éviter les collisions entre étudiants.
 
 > Convention : partout où vous lisez `prenom`, remplacez par **votre** prénom en minuscules, sans accent ni espace (ex. `lea`, `marc`, `paul`).
@@ -91,7 +106,7 @@ git branch -r
 Sur GitHub :
 1. Ouvrez une **pull request** de `enigme_prenom` vers `main`.
 2. Rédigez un titre et une description (quelle est votre énigme ?).
-3. Le **professeur** examine et fusionne la PR dans `main`.
+3. Demandez à **un camarade** de la relire, puis **fusionnez vous-même** la PR dans `main`.
 
 Mettez ensuite votre `main` local à jour :
 
@@ -104,7 +119,7 @@ git pull origin main
 
 ## Étape 5 — Résoudre l'énigme d'un binôme
 
-> Le professeur attribue à chacun **un binôme** (ex. Léa résout l'énigme de Paul). Vous ajoutez votre réponse dans le fichier de l'autre, via **votre** branche, puis pull request.
+> Choisissez **un binôme** parmi vos camarades (ex. Léa résout l'énigme de Paul). Vous ajoutez votre réponse dans le fichier de l'autre, via **votre** branche, puis pull request.
 
 ```bash
 git switch enigme_prenom
@@ -115,13 +130,13 @@ git commit -m "Répondre à l'énigme de Binôme"
 git push origin enigme_prenom
 ```
 
-Ouvrez une pull request → le professeur fusionne.
+Ouvrez une pull request → faites-la relire par un camarade, puis **fusionnez-la vous-même**.
 
 ---
 
 ## Étape 6 — Conflit garanti et résolution
 
-> Le professeur forme des **paires** et leur demande de modifier **la même ligne du même fichier**. Le conflit apparaît à la fusion. C'est **voulu**.
+> Avec votre binôme, modifiez **volontairement la même ligne du même fichier**. Le conflit apparaît à la fusion. C'est **voulu** : personne ne vient le résoudre à votre place.
 
 1. Les deux membres de la paire modifient la **même ligne** de `enigmes/cible.txt` sur leur branche respective, committent et poussent.
 2. La **première** pull request est fusionnée sans souci.
@@ -137,7 +152,7 @@ git commit -m "Résoudre le conflit dans cible.txt"
 git push origin enigme_prenom
 ```
 
-Le professeur fusionne ensuite la branche corrigée.
+Ouvrez ensuite la pull request de votre branche corrigée et **fusionnez-la vous-même**.
 
 > **Réflexe :** un conflit n'est pas une erreur, c'est une situation normale en équipe. On lit, on garde les bonnes parties, on valide.
 
@@ -264,16 +279,20 @@ git log --stat                            # statistiques par commit
 
 ---
 
-## Rôle du professeur
+## Le professeur n'intervient pas — comment il évalue
 
-Le professeur **guide** l'atelier et intervient aux moments clés, tout en laissant les étudiants faire les manipulations :
+Le professeur **ne fusionne rien, ne forme aucune paire, ne débloque personne en direct**. Vous êtes autonomes. Il **observe** et **évalue à la fin**, uniquement sur l'historique du dépôt :
 
-1. **Démarrage** : vérifie que chacun a cloné le dépôt et configuré Git (nom, courriel, SSH).
-2. **Pull requests** : examine et **fusionne** chaque PR dans `main`.
-3. **Scénarios de conflit** : forme les **paires** et déclenche volontairement les conflits, puis attribue la résolution.
-4. **Supervision** : accompagne la résolution de conflits et le rebase (rappelle la règle du force-push limité à la branche perso).
-5. **Tags** : valide les versions nominatives (`v1.0-prenom`).
-6. **Verdict du concours** : compte les points avec `git log --graph --all`, `git reflog`, `git shortlog -sn --all`, et désigne le **Maître Git**.
+| Ce qu'il regarde | Commande / endroit |
+|---|---|
+| Structure des branches et fusions | `git log --oneline --graph --all` |
+| Points de maîtrise (rebase, conflits, cherry-pick…) | historique + `git reflog` |
+| Nombre de commits par auteur | `git shortlog -sn --all` |
+| Tags nominatifs | `git tag` / onglet **Releases** |
+| Pull requests fusionnées | onglet GitHub **Pull requests** (filtre `author:`) |
+| Historique le plus propre | lecture de `git log --graph` |
+
+> En cas de gros dégât sur `main`, le professeur peut le **constater** (et en tenir compte dans la note), mais c'est à **vous** de réparer avec `git revert`, `git reset` ou `git reflog`. La résilience fait partie de l'évaluation.
 
 ---
 
