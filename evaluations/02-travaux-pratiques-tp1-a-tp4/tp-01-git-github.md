@@ -1,112 +1,243 @@
 <a id="top"></a>
 
-# TP1 — Chasse au trésor Git (collaborative)
+# TP1 — Git et GitHub · Partie 1 (Concours collaboratif)
 
-> **Travail pratique noté** · Pondération **5 %** · Remise : **dimanche 21 juin 2026** (fin de journée, en ligne) · **Activité collaborative en classe** (un seul dépôt partagé)
+> **Travail pratique noté** · Pondération **5 %** · Remise : **dimanche 21 juin 2026** (fin de journée, en ligne) · **Dépôt de classe partagé**
 >
-> **Modules couverts :** [01 — Introduction au DevOps et Git](../../01-introduction-devops-et-git/README.md), [02 — Git avancé et GitHub](../../02-git-avance-et-github/README.md)
+> **Deux parties :** **Partie 1 (ce document)** · [Partie 2 — Concours Git avancé](tp-01-git-github-partie-2.md)
+>
+> **Modules couverts :** [01 — Introduction au DevOps et Git](../../../01-introduction-devops-et-git/README.md), [02 — Git avancé et GitHub](../../../02-git-avance-et-github/README.md)
 
 ---
 
-## L'histoire
+## C'est un concours !
 
-Bienvenue dans la **Chasse au trésor Git** ! Toute la classe travaille sur **un seul et même dépôt** : `tp1`. Vous êtes tous **collaborateurs** (capitaines à bord du même navire).
+Toute la classe travaille sur **un seul dépôt partagé** : `tp1`. Au-delà de la note, c'est une **compétition amicale** :
 
-L'objectif n'est pas le code, mais la **maîtrise du flux de travail Git/GitHub à plusieurs**. Vous allez franchir **3 niveaux progressifs** : au début, tout le monde réussit facilement ; à la fin, les conflits sont garantis et il faudra les résoudre comme des pros.
+- **Le champion** est la personne avec le **plus de commits réels et utiles**.
+- Le classement est public et visible par tous (onglet **Insights > Contributors** sur GitHub).
+- **Objectif chiffré :** atteindre **au moins 15 commits** avec des messages clairs.
 
-Et parce qu'il y a un trésor, il y a un **champion** : la personne qui aura fait le **plus de commits utiles** sera couronnée à la fin.
+> **Règle anti-triche :** les commits **vides ou artificiels** (juste pour gonfler le score) **ne comptent pas** et seront retirés. On veut des commits **petits, fréquents et significatifs**.
 
 ```mermaid
 flowchart TD
-    setup["Setup : accepter l'invitation + git clone"] --> n1
-    n1["Niveau 1 — Je plante mon drapeau<br/>fichier perso unique, push direct"] --> n2
-    n2["Niveau 2 — La carte au tresor<br/>branche + Pull Request"] --> n3
-    n3["Niveau 3 — Le coffre partage<br/>meme ligne editee = conflits garantis"] --> race
-    race["Course aux commits<br/>coffre de quetes optionnelles"] --> fin["Classement : Insights + git shortlog -sn"]
+    p0["Partie 0 — Preparation"] --> p1
+    p1["Etape 1 — Mon mini-projet local<br/>C1 a C7 : 7 commits"] --> p2
+    p2["Etape 2 — Branches et fusion<br/>C8 a C10"] --> p3
+    p3["Etape 3 — Pull request<br/>C11 a C12"] --> p4
+    p4["Etape 4 — Conflits partages<br/>C13 a C14"] --> p5
+    p5["Etape 5 — Course aux commits<br/>quetes bonus"] --> fin["Classement : git shortlog + Insights"]
 ```
 
 ---
 
 ## Objectifs
 
-À la fin de ce TP, vous serez capable de :
+À la fin de cette partie, vous serez capable de :
 
-- Cloner un dépôt partagé et y contribuer en parallèle avec d'autres.
-- Créer des commits propres et atomiques avec des messages clairs.
-- Travailler avec des branches et ouvrir une **pull request** revue par un pair.
-- **Provoquer et résoudre un conflit de fusion** manuellement, sans paniquer.
-- Adopter les bons réflexes d'équipe : `git status` avant `git add`, `git pull` avant `git push`.
+- Cloner un dépôt partagé et y contribuer en parallèle.
+- Créer des commits **propres et atomiques** avec des messages clairs.
+- Travailler avec des **branches** et les **fusionner**.
+- Ouvrir et fusionner une **pull request** revue par un pair.
+- **Provoquer et résoudre un conflit** de fusion manuellement.
 
 ---
 
-## Setup commun (à faire une seule fois)
+## Étape 0 — Préparation (une seule fois)
 
-1. **Acceptez l'invitation** de collaborateur reçue par courriel (ou via la cloche de notifications sur GitHub).
-2. **Clonez** le dépôt partagé (remplacez l'URL par celle donnée en classe) :
+1. **Acceptez l'invitation** de collaborateur (courriel ou cloche de notifications GitHub).
+2. **Clonez** le dépôt (URL donnée en classe) :
 
 ```bash
 git clone https://github.com/haythem-rehouma/tp1.git
 cd tp1
 ```
 
-3. **Configurez votre identité** (si ce n'est pas déjà fait), car c'est elle qui apparaîtra dans le classement :
+3. **Configurez votre identité** (elle apparaît dans le classement) :
 
 ```bash
 git config --global user.name "Prénom Nom"
 git config --global user.email "votre.courriel@exemple.com"
 ```
 
-> **Réflexe d'or :** avant chaque `git push`, faites toujours `git pull`. Et avant chaque `git add`, faites `git status`. La majorité des problèmes Git viennent d'un oubli de ces deux gestes.
+4. **Créez votre dossier personnel** (remplacez `prenom-nom`, sans accent ni espace) :
+
+```bash
+mkdir -p eleves/prenom-nom
+cd eleves/prenom-nom
+```
+
+> **Réflexe d'or, à chaque fois :** `git status` avant `git add`, et `git pull` avant `git push`.
 
 ---
 
-## Niveau 1 — « Je plante mon drapeau » (tout le monde réussit)
+## Étape 1 — Mon mini-projet local (7 commits : C1 → C7)
 
-> But : réussir votre **premier commit et premier push** sur le dépôt partagé. Comme chacun crée **son propre fichier**, il n'y a **aucun conflit** : tout le monde réussit.
+Vous construisez un petit « carnet de bord » dans **votre dossier**. Faites **un commit par étape** (chaque commit compte au classement !).
 
-1. Mettez-vous à jour, puis créez **votre** fichier dans le dossier `participants/` (utilisez votre prénom-nom, sans accent ni espace dans le nom de fichier) :
+### C1 — Le README
 
-```bash
-git pull
-```
-
-Créez le fichier `participants/prenom-nom.md` avec par exemple :
+Créez `README.md` dans votre dossier :
 
 ```markdown
-# Prénom Nom
+# Carnet de bord — Prénom Nom
 
-- Programme : ...
-- Une chose que j'aime : ...
-- Mon emoji du jour : 🚀
+Projet du TP1 : Git et GitHub.
 ```
 
-2. Validez et publiez :
+Puis :
 
 ```bash
+git add README.md
+git commit -m "C1 - Ajouter le README du carnet de bord"
+```
+
+### C2 — Le fichier .gitignore
+
+Créez `.gitignore` (au moins une entrée) :
+
+```text
+.env
+*.log
+.DS_Store
+```
+
+```bash
+git add .gitignore
+git commit -m "C2 - Ajouter un .gitignore"
+```
+
+### C3 — Ma fiche profil
+
+Créez `profil.md` :
+
+```markdown
+# Profil
+
+- Programme : ...
+- Objectif du cours : ...
+- Emoji du jour : 🚀
+```
+
+```bash
+git add profil.md
+git commit -m "C3 - Ajouter ma fiche profil"
+```
+
+### C4 — Une liste de tâches
+
+Créez `taches.md` :
+
+```markdown
+# Mes tâches DevOps
+
+- [ ] Apprendre les branches
+- [ ] Réussir une pull request
+- [ ] Résoudre un conflit
+```
+
+```bash
+git add taches.md
+git commit -m "C4 - Ajouter ma liste de tâches"
+```
+
+### C5 — Compléter le README
+
+Ajoutez une section à la fin de `README.md` :
+
+```markdown
+
+## Contenu
+
+- `profil.md` : ma fiche
+- `taches.md` : mes objectifs
+```
+
+```bash
+git add README.md
+git commit -m "C5 - Documenter le contenu dans le README"
+```
+
+### C6 — Cocher une tâche
+
+Dans `taches.md`, cochez une case (`- [x] ...`) :
+
+```bash
+git add taches.md
+git commit -m "C6 - Cocher la première tâche réalisée"
+```
+
+### C7 — Publier sur GitHub
+
+Envoyez tout votre travail sur le dépôt partagé :
+
+```bash
+cd ../..          # revenir à la racine du dépôt
 git status
-git add participants/prenom-nom.md
-git commit -m "Ajouter le drapeau de Prénom Nom"
 git pull --rebase
 git push
 ```
 
-3. Vérifiez sur GitHub que votre fichier apparaît bien dans `participants/`.
+> Vérifiez sur GitHub que votre dossier `eleves/prenom-nom/` apparaît bien.
 
-**Réussi quand :** votre fichier est visible sur `main` et votre commit apparaît dans l'historique.
+**Vérification :** `git log --oneline` montre C1 à C6, et votre dossier est visible sur GitHub.
 
 ---
 
-## Niveau 2 — « La carte au trésor » (branche + Pull Request)
+## Étape 2 — Branches et fusion (3 commits : C8 → C10)
 
-> But : apprendre le flux professionnel **branche → push → pull request → revue → fusion**.
+### C8 — Créer une branche et y travailler
 
-1. Créez **votre branche** d'indice :
+```bash
+git switch -c feature/prenom-nom-bonus
+```
+
+Dans votre dossier, créez `eleves/prenom-nom/bonus.md` :
+
+```markdown
+# Section bonus
+
+Ajoutée depuis une branche dédiée.
+```
+
+```bash
+git add eleves/prenom-nom/bonus.md
+git commit -m "C8 - Ajouter une section bonus sur une branche"
+```
+
+### C9 — Un second commit sur la branche
+
+Ajoutez une ligne à `bonus.md`, puis :
+
+```bash
+git add eleves/prenom-nom/bonus.md
+git commit -m "C9 - Compléter la section bonus"
+```
+
+### C10 — Fusionner dans `main`
+
+```bash
+git switch main
+git pull
+git merge feature/prenom-nom-bonus
+git push
+git branch -d feature/prenom-nom-bonus
+```
+
+**Vérification :** la branche est fusionnée dans `main` et supprimée localement.
+
+---
+
+## Étape 3 — Pull request (2 commits : C11 → C12)
+
+### C11 — Préparer une branche d'indice
 
 ```bash
 git switch -c indice/prenom-nom
 ```
 
-2. Ajoutez **votre indice** vers le trésor dans un fichier `indices/prenom-nom.md` (inventez une énigme, une coordonnée, un mot de passe... soyez créatif) :
+Créez `indices/prenom-nom.md` (créez le dossier `indices/` s'il n'existe pas) :
 
 ```markdown
 # Indice de Prénom Nom
@@ -114,104 +245,116 @@ git switch -c indice/prenom-nom
 > « Le trésor se cache là où les commits sont les plus nombreux. »
 ```
 
-3. Validez et poussez **la branche** :
-
 ```bash
 git add indices/prenom-nom.md
-git commit -m "Ajouter l'indice de Prénom Nom"
+git commit -m "C11 - Ajouter mon indice"
 git push -u origin indice/prenom-nom
 ```
 
-4. Sur GitHub, ouvrez une **Pull Request** de votre branche vers `main` :
-   - Donnez un **titre** clair et une **description** (que contient votre indice ?).
-   - Demandez à **un camarade** de la relire (« Reviewers ») et de laisser un commentaire ou une approbation.
-   - Une fois approuvée, **fusionnez** la PR (« Merge pull request »), puis supprimez la branche distante.
+### C12 — Ouvrir et fusionner la pull request
 
-Variante en ligne de commande (optionnel, avec GitHub CLI) :
+Sur GitHub :
+1. Ouvrez une **Pull Request** de `indice/prenom-nom` vers `main`.
+2. Rédigez un **titre** et une **description**.
+3. Demandez à **un camarade** de la relire (« Reviewers ») et de l'approuver.
+4. **Fusionnez** la PR (« Merge pull request »), puis supprimez la branche distante.
+
+Variante en ligne de commande (optionnel) :
 
 ```bash
 gh pr create --base main --head indice/prenom-nom --title "Indice de Prénom Nom" --body "Mon indice vers le trésor."
 ```
 
-**Réussi quand :** votre PR est **ouverte, relue et fusionnée**, et votre indice est sur `main`.
+**Vérification :** votre PR est **ouverte, relue et fusionnée**.
 
 ---
 
-## Niveau 3 — « Le coffre partagé » (conflits garantis !)
+## Étape 4 — Conflits partagés (2 commits : C13 → C14)
 
-> But : **provoquer un vrai conflit** parce que tout le monde modifie **la même ligne** du même fichier, puis le **résoudre**.
+> Ici tout le monde modifie **la même ligne** du **même fichier** `TRESOR.md` : les conflits sont **garantis et voulus**.
 
-Le dépôt contient un fichier `TRESOR.md` avec une **ligne unique partagée** par toute la classe, par exemple :
-
-```markdown
-## Le code secret du coffre
-
-CODE = "_____"
-```
-
-1. Mettez-vous à jour, puis modifiez **cette même ligne** pour y inscrire **votre** contribution (votre prénom et un chiffre de votre choix) :
+### C13 — Tenter de publier votre part du code
 
 ```bash
+git switch main
 git pull
 ```
 
-Modifiez la ligne `CODE = "..."` dans `TRESOR.md`, par exemple :
+Modifiez la ligne `CODE = "..."` dans `TRESOR.md` avec votre prénom et un chiffre :
 
 ```markdown
 CODE = "Prénom-7"
 ```
 
-2. Essayez de publier directement sur `main` :
-
 ```bash
 git add TRESOR.md
-git commit -m "Inscrire ma part du code secret"
+git commit -m "C13 - Inscrire ma part du code secret"
 git push
 ```
 
-3. **Surprise attendue :** si quelqu'un a poussé avant vous, votre `push` est **rejeté** (`rejected — fetch first`). C'est normal, c'est le but du niveau ! Récupérez les changements :
+### C14 — Résoudre le conflit
+
+Si quelqu'un a poussé avant vous, le `push` est **rejeté** (`rejected — fetch first`). C'est normal :
 
 ```bash
 git pull
 ```
 
-4. Git signale un **conflit** dans `TRESOR.md`. Ouvrez le fichier : vous verrez les marqueurs `<<<<<<<`, `=======`, `>>>>>>>`. **Résolvez-le à la main** en gardant **les deux contributions** (par exemple en mettant les deux prénoms sur la même ligne), puis :
+Git signale un **conflit** dans `TRESOR.md` (marqueurs `<<<<<<<`, `=======`, `>>>>>>>`). Ouvrez le fichier, **gardez les deux contributions** (par exemple les deux prénoms sur la même ligne), puis :
 
 ```bash
 git add TRESOR.md
-git commit -m "Résoudre le conflit du code secret"
+git commit -m "C14 - Résoudre le conflit du code secret"
 git push
 ```
 
-> Si plusieurs personnes poussent en même temps, il est **normal** de répéter `git pull` → résoudre → `git push` plusieurs fois. C'est exactement ce qui se passe dans une vraie équipe.
+> Il est **normal** de répéter `git pull` → résoudre → `git push` plusieurs fois si plusieurs personnes poussent en même temps.
 
-**Réussi quand :** vous avez résolu **au moins un conflit** et votre contribution figure dans `TRESOR.md` sur `main`.
-
----
-
-## Course aux commits — « Le coffre de quêtes »
-
-Le dépôt contient un fichier `QUETES.md` rempli de **micro-quêtes optionnelles** (corriger une coquille, ajouter un fait amusant, dessiner un petit art ASCII, ajouter une ligne au journal de bord...).
-
-- **Réclamez** une quête en cochant votre nom à côté dans `QUETES.md`, puis réalisez-la.
-- Chaque quête terminée = **un (ou plusieurs) commit(s)** clairs et atomiques.
-- Comme `QUETES.md` est partagé, attendez-vous à de **mini-conflits** : remettez en pratique le réflexe `pull → résoudre → push`.
-
-> **Le champion** est la personne avec le plus de **commits réels et utiles**. Les commits vides ou artificiels (uniquement pour gonfler le score) ne comptent pas et seront ignorés. Privilégiez des commits **petits, fréquents et significatifs**.
+**Vérification :** vous avez résolu **au moins un conflit** et votre contribution est dans `TRESOR.md`.
 
 ---
 
-## Livrables et critères de réussite
+## Étape 5 — Course aux commits (le concours, illimité)
 
-| Niveau | Réussi quand... |
+Le fichier `QUETES.md` contient des **micro-quêtes optionnelles**. Réclamez-en une (inscrivez votre prénom), réalisez-la, committez. **Chaque quête = un ou plusieurs commits** qui font grimper votre score.
+
+> Plus vous réalisez de quêtes utiles, plus vous montez au classement. Restez **honnête** : commits réels et significatifs uniquement.
+
+> **Pour aller plus loin :** une fois cette partie terminée, enchaînez avec la [Partie 2 — Concours Git avancé](tp-01-git-github-partie-2.md) : rebase, squash, stash, cherry-pick, tags et reflog.
+
+---
+
+## Tableau du concours (classement)
+
+| Récompense | Comment elle est attribuée |
 |---|---|
-| **Setup** | Vous avez accepté l'invitation et cloné le dépôt |
-| **Niveau 1** | Votre fichier `participants/prenom-nom.md` est sur `main` |
-| **Niveau 2** | Votre PR d'indice est ouverte, relue et **fusionnée** |
-| **Niveau 3** | Vous avez **résolu au moins un conflit** dans `TRESOR.md` |
-| **Bonus** | Au moins une quête de `QUETES.md` réalisée |
+| 🥇 **Champion des commits** | Le plus grand nombre de commits réels (`git shortlog -sn --all`) |
+| 🧩 **Roi des quêtes** | Le plus de quêtes de `QUETES.md` réalisées |
+| 🤝 **Meilleur relecteur** | Le plus de pull requests relues/approuvées |
 
-> Aucun rapport séparé à remettre : **votre historique de commits sur le dépôt partagé EST votre livrable.** L'enseignant le consulte directement sur GitHub.
+> Le classement officiel se lit en un clic : onglet GitHub **Insights > Contributors**.
+
+---
+
+## Récapitulatif des commits attendus
+
+| Commit | Description | Étape |
+|---|---|---|
+| C1 | Ajouter le README | 1 |
+| C2 | Ajouter un `.gitignore` | 1 |
+| C3 | Ajouter la fiche profil | 1 |
+| C4 | Ajouter la liste de tâches | 1 |
+| C5 | Documenter le contenu | 1 |
+| C6 | Cocher une tâche | 1 |
+| C7 | Pousser sur GitHub | 1 |
+| C8 | Section bonus (branche) | 2 |
+| C9 | Compléter la section bonus | 2 |
+| C10 | Fusionner la branche | 2 |
+| C11 | Ajouter mon indice | 3 |
+| C12 | Ouvrir et fusionner la PR | 3 |
+| C13 | Inscrire ma part du code | 4 |
+| C14 | Résoudre le conflit | 4 |
+| Bonus | Quêtes de `QUETES.md` | 5 |
 
 ---
 
@@ -219,11 +362,13 @@ Le dépôt contient un fichier `QUETES.md` rempli de **micro-quêtes optionnelle
 
 | Critère | Pondération |
 |---|---|
-| Setup réussi + premier commit/push (Niveau 1) | 1 % |
+| Étape 1 réalisée (mini-projet, C1 → C7) + `.gitignore` correct | 1,5 % |
 | Qualité et clarté des messages de commit | 1 % |
-| Branche + pull request ouverte et fusionnée (Niveau 2) | 1,5 % |
-| Conflit provoqué et **résolu** correctement (Niveau 3) | 1 % |
-| Participation à la course aux commits / quêtes | 0,5 % |
+| Branche créée et fusionnée (C8 → C10) | 1 % |
+| Pull request ouverte et fusionnée (C11 → C12) | 1 % |
+| Conflit provoqué et **résolu** (C13 → C14) | 0,5 % |
+
+> **Bonus concours :** point(s) bonus à la discrétion de l'enseignant pour le champion des commits et le roi des quêtes.
 
 ---
 
@@ -231,13 +376,13 @@ Le dépôt contient un fichier `QUETES.md` rempli de **micro-quêtes optionnelle
 
 > _Faites `git status` avant chaque `git add`, et `git pull` avant chaque `git push`._
 >
-> _En cas de message `rejected` ou `conflict` : ne supprimez rien, ne paniquez pas. Lisez le message, faites `git pull`, résolvez, puis `git push`. C'est le cœur du métier._
+> _En cas de `rejected` ou `conflict` : ne supprimez rien, ne paniquez pas. Lisez le message, faites `git pull`, résolvez, puis `git push`._
 
 ---
 
 ## Annexe enseignant (mise en place du dépôt en 2 minutes)
 
-> Cette section est destinée à l'enseignant. Créez le dépôt `tp1`, ajoutez les étudiants comme collaborateurs (onglet **Settings > Collaborators**), puis collez les fichiers ci-dessous à la racine.
+> Créez le dépôt `tp1`, ajoutez les étudiants comme collaborateurs (**Settings > Collaborators**), puis collez les fichiers ci-dessous à la racine.
 
 ### Arborescence de départ
 
@@ -247,7 +392,7 @@ tp1/
 ├── TRESOR.md
 ├── QUETES.md
 ├── .gitignore
-├── participants/
+├── eleves/
 │   └── .gitkeep
 └── indices/
     └── .gitkeep
@@ -256,14 +401,14 @@ tp1/
 ### `README.md`
 
 ```markdown
-# Chasse au trésor Git — Dépôt de classe (TP1)
+# Dépôt de classe — TP1 (Git et GitHub)
 
-Bienvenue à bord ! Suivez les consignes du TP1 et franchissez les 3 niveaux.
+Bienvenue ! Suivez l'énoncé du TP1 étape par étape.
 
-- `participants/` : votre fiche personnelle (Niveau 1).
-- `indices/` : vos indices via pull request (Niveau 2).
-- `TRESOR.md` : le coffre partagé, source des conflits (Niveau 3).
-- `QUETES.md` : les micro-quêtes pour la course aux commits.
+- `eleves/prenom-nom/` : votre dossier de travail personnel.
+- `indices/` : vos indices via pull request.
+- `TRESOR.md` : le coffre partagé (zone de conflits).
+- `QUETES.md` : les micro-quêtes bonus.
 ```
 
 ### `TRESOR.md`
@@ -281,18 +426,17 @@ CODE = "_____"
 ### `QUETES.md`
 
 ```markdown
-# Coffre de quêtes (optionnel)
+# Coffre de quêtes (bonus)
 
-Réclamez une quête en inscrivant votre prénom dans la colonne « Pris par », puis réalisez-la.
+Réclamez une quête en inscrivant votre prénom dans « Pris par », puis réalisez-la.
 
 | # | Quête | Pris par |
 |---|---|---|
 | 1 | Corriger une coquille dans le README | |
 | 2 | Ajouter un fait amusant dans `faits.md` | |
-| 3 | Dessiner un petit art ASCII dans `art.md` | |
-| 4 | Ajouter une ligne au journal de bord `journal.md` | |
-| 5 | Ajouter un emoji à votre fiche participant | |
-| 6 | Proposer une nouvelle quête à cette liste | |
+| 3 | Dessiner un art ASCII dans `art.md` | |
+| 4 | Ajouter une ligne au journal `journal.md` | |
+| 5 | Proposer une nouvelle quête à cette liste | |
 ```
 
 ### `.gitignore`
@@ -304,18 +448,28 @@ node_modules/
 *.log
 ```
 
-### Voir le champion (qui a fait le plus de commits) — zéro maintenance
+### Désigner le champion — sans effort
 
-- **Sur GitHub :** onglet **Insights > Contributors** (le classement s'affiche en un clic).
-- **En local :**
+- **Classement (qui a le plus de commits) :**
 
 ```bash
 git pull
 git shortlog -sn --all
+```
+
+- **Historique d'un étudiant précis :**
+
+```bash
 git log --oneline --author="Prénom Nom"
 ```
 
-> `git shortlog -sn --all` affiche directement chaque auteur avec son nombre de commits, trié du plus grand au plus petit.
+- **Vue graphique :** onglet GitHub **Insights > Contributors**, ou en local :
+
+```bash
+git log --oneline --graph --all
+```
+
+> `git shortlog -sn --all` affiche chaque auteur avec son nombre de commits, trié du plus grand au plus petit : le **champion est en haut**.
 
 ---
 
