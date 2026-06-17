@@ -447,7 +447,6 @@ git push
 
 <details> 
 
-
 <summary> Idée : Créer deux branches locales </summary> 
 
   Créer deux branches locales qui modifient **la même ligne** de `TRESOR.md`,
@@ -489,7 +488,7 @@ git push
   git add TRESOR.md
   git commit -m "C14 - Résoudre le conflit du code secret"
   git branch -d conflit/adversaire conflit/gilbert
-
+```
   ---
   Résultat dans git log
 
@@ -510,7 +509,8 @@ git push
   - Historique propre avec les deux commits exigés (C13 + C14)
   - Démontre la maîtrise des branches et de la résolution de conflits
 
- </details>
+</details>
+
 
 
 ### C14 — Résoudre le conflit
