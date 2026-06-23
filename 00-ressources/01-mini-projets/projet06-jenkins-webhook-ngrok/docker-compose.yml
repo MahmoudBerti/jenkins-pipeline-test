@@ -1,0 +1,28 @@
+services:
+  jenkins:
+    build: .
+    container_name: jenkins-webhook-tp
+    ports:
+      - "8080:8080"      # interface web de Jenkins
+      - "50000:50000"    # communication avec les agents (optionnel)
+    volumes:
+      - jenkins-data:/var/jenkins_home
+    restart: unless-stopped
+
+  # ngrok : expose Jenkins (port 8080) derriere une URL publique HTTPS,
+  # SANS VPS ni ouverture de port sur votre box. GitHub pourra ainsi
+  # joindre votre Jenkins local pour livrer le webhook.
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok-jenkins
+    command: http jenkins:8080
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}   # defini dans le fichier .env
+    ports:
+      - "4040:4040"      # tableau de bord ngrok : http://localhost:4040
+    depends_on:
+      - jenkins
+    restart: unless-stopped
+
+volumes:
+  jenkins-data:
